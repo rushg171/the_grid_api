@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const cors = require('cors');
 const express = require('express');
 const app = express();
@@ -7,6 +8,7 @@ const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
+app.use('/products', express.static(path.join(__dirname, 'public')));
 app.use('/products', proRouter);
 
 app.get('/', (req, res) => {
