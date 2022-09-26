@@ -1,10 +1,10 @@
 const knex = require('knex')({
   client: 'mysql',
   connection: {
-    host: 'sql6.freemysqlhosting.net',
-    user: 'sql6520636',
-    password: 'AhFXmK1Fxe',
-    database: 'sql6520636',
+    host: 'sql6.freesqldatabase.com',
+    user: 'sql6522091',
+    password: 'eJUGWmRnIR',
+    database: 'sql6522091',
   },
 });
 

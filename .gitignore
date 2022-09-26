@@ -9,7 +9,8 @@ server/localdev-config.json
 # testing
 /coverage
 .nyc_output/
-
+/temp
+temp.js
 # production
 /build
 
