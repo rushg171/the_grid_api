@@ -1,10 +1,11 @@
-const knex = require('knex')({
+const Knex = require('knex');
+const knex = Knex({
   client: 'mysql',
   connection: {
-    host: 'sql6.freesqldatabase.com',
-    user: 'sql6522091',
-    password: 'eJUGWmRnIR',
-    database: 'sql6522091',
+    host: 'sql6.freemysqlhosting.net',
+    user: 'sql6523716',
+    password: 'tsaxvpisEd',
+    database: 'sql6523716',
   },
 });
 

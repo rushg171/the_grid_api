@@ -1,0 +1,7 @@
+Add uuid support for id creation
+create schema
+add schema to sql db
+enter 2 rows of data
+Fetch all method using model & objection
+CRUD for SECTION, ATTRIBUTE
+CRUD for PRODUCT

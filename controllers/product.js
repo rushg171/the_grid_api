@@ -1,4 +1,6 @@
+const { nanoid } = require('nanoid');
 const { knex } = require('../connector');
+const Product = require('../models/Product');
 
 const baseImageUrl = 'https://api-the-grid.herokuapp.com/products/imgs/';
 const productTable = 'product';
@@ -39,6 +41,10 @@ function groupBy(objectArray, property) {
 }
 
 const productCon = {
+  fetchAll: async (req, res, next) => {
+    const collection = await Product.query();
+    return res.json(collection);
+  },
   view: async (req, res) => {
     await knex({ product: productTable })
       .select(productColumns)
@@ -96,6 +102,24 @@ const productCon = {
       secDetails: groupBy(secDetails, secColumns.name),
     });
   },
+  insertOne: async (req, res, next) => {
+    if (!req.body.product_name) {
+      return res.json({
+        success: false,
+        message: 'Name is required!',
+      });
+    }
+    const result = await Product.query().insert({
+      product_id: nanoid(10),
+      product_name: req.body.product_name,
+      product_short_description: req.body.product_short_description,
+      product_description: req.body.product_description,
+      product_main_image_url: req.file.filename ? req.file.filename : '',
+      product_category: req.body.product_category,
+    });
+    console.log(req.file.filename);
+    return res.json(result);
+  },
 
   new: async (req, res) => {
     const name = req.body.name ? req.body.name : '';
@@ -111,10 +135,11 @@ const productCon = {
       });
     knex(productTable)
       .insert({
+        product_id: nanoid(10),
         [productColumns.name]: name,
         [productColumns.shortDesc]: shortDescription,
         [productColumns.fullDesc]: description,
-        [productColumns.imageUrl]: baseImageUrl + req.file.filename,
+        // [productColumns.imageUrl]: baseImageUrl + req.file.filename,
         [productColumns.pCategory]: category,
       })
       .then((id) => {
