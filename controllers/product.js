@@ -114,7 +114,9 @@ const productCon = {
       product_name: req.body.product_name,
       product_short_description: req.body.product_short_description,
       product_description: req.body.product_description,
-      product_main_image_url: req.file.filename ? req.file.filename : '',
+      product_main_image_url: req.file.filename
+        ? baseImageUrl + req.file.filename
+        : '',
       product_category: req.body.product_category,
     });
     console.log(req.file.filename);
