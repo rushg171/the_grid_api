@@ -27,7 +27,6 @@ const secColumns = {
   name: 'd_section_name',
   description: 'd_section_description',
 };
-
 function groupBy(objectArray, property) {
   return objectArray.reduce((acc, obj) => {
     const key = obj[property];
@@ -39,7 +38,6 @@ function groupBy(objectArray, property) {
     return acc;
   }, {});
 }
-
 const productCon = {
   fetchAll: async (req, res, next) => {
     const collection = await Product.query();
@@ -59,13 +57,11 @@ const productCon = {
         });
       });
   },
-
   fileTest: async (req, res) => {
     const imageName = req.file.filename;
     console.log(imageName);
     res.json({ image: imageName });
   },
-
   fetchOne: async (req, res, next) => {
     productId = await req.query.productId;
     console.log(productId);
@@ -109,20 +105,27 @@ const productCon = {
         message: 'Name is required!',
       });
     }
-    const result = await Product.query().insert({
-      product_id: nanoid(10),
-      product_name: req.body.product_name,
-      product_short_description: req.body.product_short_description,
-      product_description: req.body.product_description,
-      product_main_image_url: req.file.filename
-        ? baseImageUrl + req.file.filename
-        : '',
-      product_category: req.body.product_category,
-    });
-    console.log(req.file.filename);
+    const result = await Product.query()
+      .insert({
+        product_id: nanoid(10),
+        product_name: req.body.product_name,
+        product_short_description: req.body.product_short_description,
+        product_description: req.body.product_description,
+        product_main_image_url: req.file.filename
+          ? baseImageUrl + req.file.filename
+          : null,
+        product_category: req.body.product_category,
+      })
+      .catch((err) => {
+        console.error(err);
+        return res.json({
+          success: false,
+          message: 'An error occurred, please try again in some time',
+        });
+      });
+    console.log(result.product_name, result.product_main_image_url);
     return res.json(result);
   },
-
   new: async (req, res) => {
     const name = req.body.name ? req.body.name : '';
     const shortDescription = req.body.shortDescription
@@ -155,7 +158,6 @@ const productCon = {
         });
       });
   },
-
   update: async (req, res) => {
     const id = req.body.id ? req.body.id : '';
     const name = req.body.name ? req.body.name : '';
@@ -204,7 +206,6 @@ const productCon = {
         });
       });
   },
-
   del: async (req, res) => {
     const id = req.body.id;
     if (!id)
@@ -236,6 +237,45 @@ const productCon = {
           message: 'An error occurred, please try again in some time',
         });
       });
+  },
+  insertTest: async (req, res, next) => {
+    if (!req.body.product_name) {
+      return res.json({
+        success: false,
+        message: 'Name is required!',
+      });
+    }
+    const insertedGraph = await Product.transaction(async (trx) => {
+      const insertedGraph = await Product.query(trx)
+        .allowGraph('specifications')
+        .insertGraphAndFetch({
+          product_id: nanoid(10),
+          product_name: req.body.product_name,
+          product_short_description: req.body.product_short_description,
+          product_description: req.body.product_description,
+          product_main_image_url: req.file.filename
+            ? baseImageUrl + req.file.filename
+            : '',
+          product_category: req.body.product_category,
+          specifications: [
+            {
+              product_dynamic_attributes_id: 'Testing service 10001',
+              product_id: 'xyR79uzu73',
+              d_section_id: 'Testing service 007',
+              d_attribute_id: 'Testing service 007',
+              d_attribute_key: 'Testing service 007',
+              d_attribute_value: 'Testing service 007',
+            },
+          ],
+        });
+      return res.json(insertedGraph);
+    }).catch((err) => {
+      console.error(err);
+      return res.json({
+        success: false,
+        message: 'An error occurred, please try again in some time',
+      });
+    });
   },
 };
 

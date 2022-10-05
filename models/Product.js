@@ -28,15 +28,15 @@ class Product extends Model {
     };
   }
   static get relationMappings() {
-    const Product_dynamic_attribute = require('./Product_dynamic_attribute');
+    const Product_dynamic_attributes = require('./Product_dynamic_attributes');
 
     return {
       specifications: {
         relation: Model.HasManyRelation,
-        modelClass: Product_dynamic_attribute,
+        modelClass: Product_dynamic_attributes,
         join: {
           from: 'product.product_id',
-          to: 'product_dynamic_attribute,product_id',
+          to: 'product_dynamic_attributes.product_id',
         },
       },
     };

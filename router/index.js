@@ -30,6 +30,9 @@ proRouter.route('/').all(productCon.view);
 proRouter.route('/fetchOne').get(productCon.fetchOne);
 proRouter.route('/fetchAll').get(productCon.fetchAll);
 proRouter.route('/insert').post(upload.single('cover'), productCon.insertOne);
+proRouter
+  .route('/insertTest')
+  .post(upload.single('cover'), productCon.insertTest);
 proRouter.route('/new').all(upload.single('cover'), productCon.new);
 proRouter.route('/update').all(upload.single('cover'), productCon.update);
 proRouter.route('/delete').all(productCon.del);
